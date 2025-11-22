@@ -1,0 +1,6 @@
+@BTL_PhatTrienPM_HostAddress = http://localhost:5126
+
+GET {{BTL_PhatTrienPM_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
