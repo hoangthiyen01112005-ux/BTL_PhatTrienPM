@@ -9,7 +9,9 @@ public partial class NoiDung
 
     public string? TieuDe { get; set; }
 
-    public string? ChiTietNoiDung { get; set; }
+    public string? ChiTiet { get; set; }
+
+    public string? HinhAnh { get; set; }
 
     public DateOnly? NgayDang { get; set; }
 

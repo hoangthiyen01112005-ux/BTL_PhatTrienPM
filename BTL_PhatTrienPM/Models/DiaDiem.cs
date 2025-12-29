@@ -15,5 +15,7 @@ public partial class DiaDiem
 
     public string? HinhAnh { get; set; }
 
+    public string? LinkBanDo { get; set; }
+
     public virtual ICollection<ChiTietLichTrinh> ChiTietLichTrinhs { get; set; } = new List<ChiTietLichTrinh>();
 }

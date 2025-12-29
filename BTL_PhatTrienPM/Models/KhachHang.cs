@@ -9,15 +9,15 @@ public partial class KhachHang
 
     public string? HoTen { get; set; }
 
-    public DateOnly? NgaySinh { get; set; }
-
-    public string? GioiTinh { get; set; }
-
     public string? Sdt { get; set; }
 
     public string? Email { get; set; }
 
+    public string? DiaChi { get; set; }
+
     public int? MaTaiKhoan { get; set; }
+
+    public virtual ICollection<GioHang> GioHangs { get; set; } = new List<GioHang>();
 
     public virtual ICollection<HoaDonBan> HoaDonBans { get; set; } = new List<HoaDonBan>();
 

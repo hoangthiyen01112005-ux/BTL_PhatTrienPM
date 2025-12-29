@@ -7,11 +7,9 @@ public partial class PhieuNhap
 {
     public int MaPhieuNhap { get; set; }
 
-    public DateOnly? NgayLap { get; set; }
+    public DateTime? NgayLap { get; set; }
 
     public decimal? TongGiaTri { get; set; }
-
-    public string? TrangThai { get; set; }
 
     public int? MaDoiTac { get; set; }
 

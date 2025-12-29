@@ -9,11 +9,9 @@ public partial class PhanHoi
 
     public string? NoiDung { get; set; }
 
-    public int? DanhGia { get; set; }
+    public int? DiemDanhGia { get; set; }
 
-    public DateOnly? NgayGui { get; set; }
-
-    public bool? TrangThaiDuyet { get; set; }
+    public DateTime? NgayGui { get; set; }
 
     public int? MaKhachHang { get; set; }
 

@@ -11,17 +11,17 @@ public partial class DichVu
 
     public string? LoaiDichVu { get; set; }
 
-    public decimal? GiaNhap { get; set; }
+    public string? HinhAnh { get; set; }
 
-    public decimal? GiaBan { get; set; }
+    public string? LinkBanDo { get; set; }
 
     public int? MaDoiTac { get; set; }
+
+    public decimal? GiaNhap { get; set; }
 
     public virtual ICollection<ChiTietLichTrinh> ChiTietLichTrinhs { get; set; } = new List<ChiTietLichTrinh>();
 
     public virtual ICollection<ChiTietPhieuNhap> ChiTietPhieuNhaps { get; set; } = new List<ChiTietPhieuNhap>();
 
     public virtual DoiTac? MaDoiTacNavigation { get; set; }
-
-    public virtual ICollection<Ve> Ves { get; set; } = new List<Ve>();
 }

@@ -9,13 +9,9 @@ public partial class NhanVien
 
     public string? HoTen { get; set; }
 
-    public DateOnly? NgaySinh { get; set; }
-
-    public string? GioiTinh { get; set; }
+    public string? Email { get; set; }
 
     public string? Sdt { get; set; }
-
-    public string? Email { get; set; }
 
     public string? ChucVu { get; set; }
 
