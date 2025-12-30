@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BTL_PhatTrienPM.DTOs;
+using BTL_PhatTrienPM.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using BTL_PhatTrienPM.Models;
 
 namespace BTL_PhatTrienPM.Controllers
 {
@@ -11,59 +9,52 @@ namespace BTL_PhatTrienPM.Controllers
     [ApiController]
     public class VesController : ControllerBase
     {
-        private readonly DaTravelContext _context;
+        private readonly IVeService _veService;
 
-        public VesController(DaTravelContext context)
+        // Tiêm Service vào Controller (Dependency Injection)
+        public VesController(IVeService veService)
         {
-            _context = context;
+            _veService = veService;
         }
 
-        // GET: api/Ves (Lấy danh sách)
+        // Lấy danh sách vé
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Ve>>> GetVes()
+        public IActionResult GetAll()
         {
-            // Nếu bảng Ve có liên kết với DichVu, dùng Include để lấy luôn tên Dịch vụ
-            return await _context.Ves.Include(v => v.MaDichVuNavigation).ToListAsync();
+            return Ok(_veService.GetAllVe());
         }
 
-        // GET: api/Ves/5 (Lấy 1 cái)
+        // Lấy chi tiết 1 vé
         [HttpGet("{id}")]
-        public async Task<ActionResult<Ve>> GetVe(int id)
+        public IActionResult GetById(int id)
         {
-            var ve = await _context.Ves.FindAsync(id);
-
-            if (ve == null)
-            {
-                return NotFound();
-            }
-
-            return ve;
+            var ve = _veService.GetVeById(id);
+            if (ve == null) return NotFound();
+            return Ok(ve);
         }
 
-        // POST: api/Ves (Thêm mới)
+        // Thêm vé mới
         [HttpPost]
-        public async Task<ActionResult<Ve>> PostVe(Ve ve)
+        public IActionResult Create(VeDTO veDto)
         {
-            _context.Ves.Add(ve);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetVe", new { id = ve.MaVe }, ve);
+            _veService.AddVe(veDto);
+            return Ok(new { message = "Thêm vé thành công!" });
         }
 
-        // DELETE: api/Ves/5 (Xóa)
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteVe(int id)
+        // Sửa vé
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, VeDTO veDto)
         {
-            var ve = await _context.Ves.FindAsync(id);
-            if (ve == null)
-            {
-                return NotFound();
-            }
+            _veService.UpdateVe(id, veDto);
+            return Ok(new { message = "Cập nhật vé thành công!" });
+        }
 
-            _context.Ves.Remove(ve);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+        // Xóa vé
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            _veService.DeleteVe(id);
+            return Ok(new { message = "Xóa vé thành công!" });
         }
     }
 }
