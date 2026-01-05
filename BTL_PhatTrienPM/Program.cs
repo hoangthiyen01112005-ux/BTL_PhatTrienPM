@@ -19,7 +19,7 @@ builder.Services.AddDbContext<DaTravelContext>(options =>
 // Tại đây bạn phải liệt kê tất cả các cặp Interface - Service mà nhóm bạn làm
 // Ví dụ (Bỏ comment khi bạn đã tạo file):
 builder.Services.AddScoped<IVeService, VeService>();
-// builder.Services.AddScoped<IGioHangService, GioHangService>();
+builder.Services.AddScoped<IGioHangService, GioHangService>();
 // builder.Services.AddScoped<IDichVuService, DichVuService>();
 
 // ==============================================
