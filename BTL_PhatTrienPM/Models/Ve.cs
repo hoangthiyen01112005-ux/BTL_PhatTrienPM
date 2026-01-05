@@ -15,11 +15,23 @@ public partial class Ve
 
     public int? SoChoToiDa { get; set; }
 
+    public int? SoChoDaDat { get; set; }
+
+    public DateTime? NgayKhoiHanh { get; set; }
+
+    public DateTime? NgayKetThuc { get; set; }
+
     public string? HinhAnh { get; set; }
 
     public string? LinkBanDo { get; set; }
 
-    public DateOnly? NgayTao { get; set; }
+    public DateTime? NgayTao { get; set; }
+
+    public DateTime? NgayCapNhat { get; set; }
+
+    public int? TrangThai { get; set; }
+
+    public byte[] PhienBan { get; set; } = null!;
 
     public virtual ICollection<ChiTietHoaDon> ChiTietHoaDons { get; set; } = new List<ChiTietHoaDon>();
 

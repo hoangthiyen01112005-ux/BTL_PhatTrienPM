@@ -13,7 +13,7 @@ public partial class NoiDung
 
     public string? HinhAnh { get; set; }
 
-    public DateOnly? NgayDang { get; set; }
+    public DateTime? NgayDang { get; set; }
 
     public int? MaNhanVien { get; set; }
 

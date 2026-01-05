@@ -13,12 +13,17 @@ namespace BTL_PhatTrienPM.Services.Implements
             _context = context;
         }
 
-        // 1. Lấy danh sách
-        public List<VeDTO> GetAllVe()
+        // 1. Lấy danh sách (Có tìm kiếm)
+        public List<VeDTO> GetAllVe(string? keyword = null)
         {
-            var listVe = _context.Ves.ToList();
-            // Chuyển từ Model sang DTO
-            return listVe.Select(v => new VeDTO
+            var query = _context.Ves.AsQueryable();
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                query = query.Where(v => v.TenVe.Contains(keyword));
+            }
+
+            return query.Select(v => new VeDTO
             {
                 MaVe = v.MaVe,
                 TenVe = v.TenVe,
@@ -26,7 +31,15 @@ namespace BTL_PhatTrienPM.Services.Implements
                 GiaBan = v.GiaBan,
                 SoChoToiDa = v.SoChoToiDa,
                 HinhAnh = v.HinhAnh,
-                LinkBanDo = v.LinkBanDo
+                LinkBanDo = v.LinkBanDo,
+
+                // --- FIX LỖI 1: Xử lý NULL ---
+                // Nếu trong DB là null thì lấy giá trị mặc định (DateTime.MinValue hoặc DateTime.Now)
+                // Hoặc dùng .GetValueOrDefault()
+                NgayKhoiHanh = v.NgayKhoiHanh.GetValueOrDefault(),
+                NgayKetThuc = v.NgayKetThuc.GetValueOrDefault(),
+
+                PhienBan = v.PhienBan
             }).ToList();
         }
 
@@ -44,13 +57,25 @@ namespace BTL_PhatTrienPM.Services.Implements
                 GiaBan = v.GiaBan,
                 SoChoToiDa = v.SoChoToiDa,
                 HinhAnh = v.HinhAnh,
-                LinkBanDo = v.LinkBanDo
+                LinkBanDo = v.LinkBanDo,
+
+                // --- FIX LỖI 1: Xử lý NULL ---
+                NgayKhoiHanh = v.NgayKhoiHanh.GetValueOrDefault(),
+                NgayKetThuc = v.NgayKetThuc.GetValueOrDefault(),
+
+                PhienBan = v.PhienBan
             };
         }
 
         // 3. Thêm mới
         public void AddVe(VeDTO veDto)
         {
+            // Validate
+            if (veDto.NgayKetThuc < veDto.NgayKhoiHanh)
+            {
+                throw new Exception("Ngày kết thúc không được nhỏ hơn ngày khởi hành");
+            }
+
             var newVe = new Ve
             {
                 TenVe = veDto.TenVe,
@@ -59,8 +84,13 @@ namespace BTL_PhatTrienPM.Services.Implements
                 SoChoToiDa = veDto.SoChoToiDa,
                 HinhAnh = veDto.HinhAnh,
                 LinkBanDo = veDto.LinkBanDo,
-                // Lấy ngày hiện tại
-                NgayTao = DateOnly.FromDateTime(DateTime.Now)
+                NgayKhoiHanh = veDto.NgayKhoiHanh,
+                NgayKetThuc = veDto.NgayKetThuc,
+
+                // --- FIX LỖI 2: Sai kiểu dữ liệu ---
+                // Database dùng DateTime, không dùng DateOnly
+                // Dùng DateTime.Now để lấy ngày giờ hiện tại
+                NgayTao = DateTime.Now
             };
             _context.Ves.Add(newVe);
             _context.SaveChanges();
@@ -78,6 +108,10 @@ namespace BTL_PhatTrienPM.Services.Implements
                 ve.SoChoToiDa = veDto.SoChoToiDa;
                 ve.HinhAnh = veDto.HinhAnh;
                 ve.LinkBanDo = veDto.LinkBanDo;
+
+                ve.NgayKhoiHanh = veDto.NgayKhoiHanh;
+                ve.NgayKetThuc = veDto.NgayKetThuc;
+
                 _context.SaveChanges();
             }
         }

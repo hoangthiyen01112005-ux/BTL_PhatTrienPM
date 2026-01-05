@@ -7,9 +7,9 @@ public partial class ChiTietLichTrinh
 {
     public int MaLichTrinh { get; set; }
 
-    public int MaVe { get; set; }
+    public int? MaVe { get; set; }
 
-    public int MaDiaDiem { get; set; }
+    public int? MaDiaDiem { get; set; }
 
     public int? MaDichVu { get; set; }
 
@@ -17,9 +17,9 @@ public partial class ChiTietLichTrinh
 
     public string? HoatDong { get; set; }
 
-    public virtual DiaDiem MaDiaDiemNavigation { get; set; } = null!;
+    public virtual DiaDiem? MaDiaDiemNavigation { get; set; }
 
     public virtual DichVu? MaDichVuNavigation { get; set; }
 
-    public virtual Ve MaVeNavigation { get; set; } = null!;
+    public virtual Ve? MaVeNavigation { get; set; }
 }

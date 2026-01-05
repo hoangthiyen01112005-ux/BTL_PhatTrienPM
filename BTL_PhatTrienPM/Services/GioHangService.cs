@@ -1,9 +1,11 @@
 ﻿using BTL_PhatTrienPM.Models;
 using BTL_PhatTrienPM.DTOs;
 using BTL_PhatTrienPM.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace BTL_PhatTrienPM.Services.Implements
 {
+    // Phải kế thừa IGioHangService, KHÔNG phải ControllerBase
     public class GioHangService : IGioHangService
     {
         private readonly DaTravelContext _context;
@@ -15,46 +17,56 @@ namespace BTL_PhatTrienPM.Services.Implements
 
         public List<GioHangOutputDTO> GetGioHangByKhachHang(int maKhachHang)
         {
-            // Join bảng Giỏ hàng với bảng Vé để lấy tên và giá
-            var list = _context.GioHangs
+            // Kết nối bảng GioHang với bảng Ve
+            return _context.GioHangs
+                .Include(g => g.MaVeNavigation)
                 .Where(g => g.MaKhachHang == maKhachHang)
                 .Select(g => new GioHangOutputDTO
                 {
                     MaGioHang = g.MaGioHang,
-                    MaVe = g.MaVe,
-                    TenVe = g.Ve.TenVe,       // Lấy tên từ bảng Ve
-                    HinhAnh = g.Ve.HinhAnh,   // Lấy ảnh từ bảng Ve
-                    GiaBan = (decimal)g.Ve.GiaBan,
-                    SoLuong = (int)g.SoLuong,
-                    ThanhTien = (decimal)(g.Ve.GiaBan * g.SoLuong)
-                }).ToList();
 
-            return list;
+                    // SỬA LỖI LỆCH DATA (như ảnh bạn gửi):
+                    // Database là int? (có thể null), DTO là int (bắt buộc)
+                    // Dùng "?? 0" nghĩa là: nếu null thì lấy bằng 0
+                    MaVe = g.MaVe ?? 0,
+
+                    // Kiểm tra null cho navigation property để tránh lỗi
+                    TenVe = g.MaVeNavigation != null ? g.MaVeNavigation.TenVe : "Vé không tồn tại",
+                    HinhAnh = g.MaVeNavigation != null ? g.MaVeNavigation.HinhAnh : "",
+                    GiaBan = g.MaVeNavigation != null ? (g.MaVeNavigation.GiaBan ?? 0) : 0,
+
+                    SoLuong = g.SoLuong ?? 0,
+
+                    // Tính thành tiền
+                    ThanhTien = (g.MaVeNavigation != null ? (g.MaVeNavigation.GiaBan ?? 0) : 0) * (g.SoLuong ?? 0)
+                })
+                .ToList();
         }
 
         public void AddToCart(GioHangInputDTO input)
         {
-            // Kiểm tra xem vé này đã có trong giỏ của khách chưa
+            // Kiểm tra xem đã có vé này trong giỏ chưa
             var existingItem = _context.GioHangs
-                .FirstOrDefault(g => g.MaKhachHang == input.MaKhachHang && g.MaVe == input.MaVe);
+                .FirstOrDefault(x => x.MaKhachHang == input.MaKhachHang && x.MaVe == input.MaVe);
 
             if (existingItem != null)
             {
-                // Nếu có rồi thì cộng dồn số lượng
-                existingItem.SoLuong += input.SoLuong;
+                // Có rồi thì cộng thêm số lượng
+                existingItem.SoLuong = (existingItem.SoLuong ?? 0) + input.SoLuong;
             }
             else
             {
-                // Chưa có thì thêm mới
+                // Chưa có thì tạo mới
                 var newItem = new GioHang
                 {
                     MaKhachHang = input.MaKhachHang,
                     MaVe = input.MaVe,
                     SoLuong = input.SoLuong,
-                    NgayThem = DateTime.Now
+                    NgayThem = DateTime.Now // Lưu thời gian thêm
                 };
                 _context.GioHangs.Add(newItem);
             }
+
             _context.SaveChanges();
         }
 

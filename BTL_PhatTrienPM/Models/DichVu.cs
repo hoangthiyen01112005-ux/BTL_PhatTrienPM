@@ -11,13 +11,13 @@ public partial class DichVu
 
     public string? LoaiDichVu { get; set; }
 
+    public decimal? GiaNhap { get; set; }
+
     public string? HinhAnh { get; set; }
 
     public string? LinkBanDo { get; set; }
 
     public int? MaDoiTac { get; set; }
-
-    public decimal? GiaNhap { get; set; }
 
     public virtual ICollection<ChiTietLichTrinh> ChiTietLichTrinhs { get; set; } = new List<ChiTietLichTrinh>();
 

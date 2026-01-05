@@ -15,7 +15,7 @@ public partial class TaiKhoan
 
     public bool? TrangThai { get; set; }
 
-    public virtual ICollection<KhachHang> KhachHangs { get; set; } = new List<KhachHang>();
+    public virtual KhachHang? KhachHang { get; set; }
 
-    public virtual ICollection<NhanVien> NhanViens { get; set; } = new List<NhanVien>();
+    public virtual NhanVien? NhanVien { get; set; }
 }
