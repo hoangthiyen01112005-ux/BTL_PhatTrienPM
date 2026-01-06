@@ -1,4 +1,4 @@
-﻿namespace BLL
+﻿namespace Model
 {
     public class Class1
     {
